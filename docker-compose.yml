@@ -1,0 +1,44 @@
+version: '3.8'
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - WATCHFILES_FORCE_POLLING=true
+    volumes:
+      - ./backend:/app
+    networks:
+      - app-network
+    restart: always
+
+  # front:
+  #   build:
+  #     context: ./front
+  #     dockerfile: dockerfile_dev
+  #   restart: always
+  #   env_file:
+  #     - .env 
+  #   volumes:
+  #     - ./front/src:/app/src/
+  #   environment:
+  #     - CHOKIDAR_USEPOLLING=true
+  #     - WATCHPACK_POLLING=true
+  #     - NODE_ENV=development
+  #     - VITE_API_URL=${API_URL}
+  #     - VITE_CHROME_EXTENSION_ID=${CHROME_EXTENSION_ID}
+  #   ports:
+  #     - "80:80"
+  #   depends_on:
+  #     - back
+  #   networks:
+  #     - app-network
+
+volumes:
+  postgres_data:
+
+networks:
+  app-network:
+    driver: bridge
