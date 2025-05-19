@@ -1,28 +1,40 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Face from "./components/face";
 import { useRecorder } from "./hooks/useRecorder";
 import ChatHistory from "./components/ChatHistory";
-import speakWithElevenLabs, { speakWithBrowserTTS } from "./services/tts";
+import speakWithElevenLabs, { speakWithOpenAI } from "./services/tts";
 import Recette from "./components/Recette";
+
+/** Extrait la clé `text` si la réponse est un JSON valide, sinon renvoie la chaîne brute. */
+function extractText(raw: string): string {
+  try {
+    const parsed = JSON.parse(raw);
+    if (parsed && typeof parsed === "object" && "text" in parsed) {
+      return parsed.text as string;
+    }
+  } catch {
+    /* raw n'est pas un JSON --> on renvoie tel quel */
+  }
+  return raw;
+}
 
 const App: React.FC = () => {
   const [isTalking, setIsTalking] = useState(false);
   const [isActive, setIsActive] = useState(false);
   const { isRecording, startRecording, stopRecording } = useRecorder();
+
   const [chatHistory, setChatHistory] = useState<
     { role: "user" | "bot"; text: string }[]
   >([]);
 
-  const voices = window.speechSynthesis.getVoices();
-  console.log(voices);
-
+  /** Démarre l'enregistrement si ENTER pressé, toggle recette avec R */
   useEffect(() => {
     const handleKeyDown = async (e: KeyboardEvent) => {
       if (e.key === "Enter" && !isRecording) {
         await startRecording();
       }
       if (e.key.toLowerCase() === "r") {
-        setIsActive((prev) => !prev); // toggle l'affichage de la recette
+        setIsActive((prev) => !prev);
       }
     };
 
@@ -30,38 +42,49 @@ const App: React.FC = () => {
       if (e.key === "Enter" && isRecording) {
         const audioBlob = await stopRecording();
 
-        // Préparer l’envoi
+        /* --- Speech-to-text --- */
         const formData = new FormData();
         formData.append("file", audioBlob, "speech.webm");
 
-        const res = await fetch("http://localhost:8000/api/stt/transcribe", {
+        const sttRes = await fetch("http://localhost:8000/api/stt/transcribe", {
           method: "POST",
           body: formData,
         });
+        const sttData = await sttRes.json();
+        const userText = sttData.transcription || "[aucune transcription]";
 
-        const data = await res.json();
-        const text = data.transcription || "[aucune transcription]";
+        /* --- Ajout tour utilisateur --- */
+        setChatHistory((prev) => [...prev, { role: "user", text: userText }]);
 
-        const new_chatHistory = [...chatHistory, { role: "user", text }];
+        /* --- Préparation payload backend (historique + nouveau tour) --- */
+        const historyForBackend = [
+          ...chatHistory,
+          { role: "user", text: userText },
+        ];
 
-        setChatHistory((prev) => [...prev, { role: "user", text }]);
-
-        await fetch("http://localhost:8000/api/mistral/generate", {
+        /* --- Appel Mistral backend --- */
+        fetch("http://localhost:8000/api/mistral/generate", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ history: new_chatHistory }),
+          body: JSON.stringify({ history: historyForBackend }),
         })
           .then((res) => res.json())
           .then(async (data) => {
-            const botReply = data.response;
+            const rawReply = data.response as string;
+
+            /* -------- on extrait uniquement le texte pour TTS -------- */
+            const textForTTS = extractText(rawReply);
+
+            /* -------- on ajoute la réponse dans l'historique -------- */
             setChatHistory((prev) => [
               ...prev,
-              { role: "bot", text: botReply },
+              { role: "bot", text: textForTTS },
             ]);
 
-            // await speakWithElevenLabs(botReply, setIsTalking);
-            await speakWithBrowserTTS(botReply, setIsTalking);
-          });
+            /* -------- TTS -------- */
+            await speakWithOpenAI(textForTTS, setIsTalking);
+          })
+          .catch((err) => console.error("Backend error:", err));
       }
     };
 
@@ -71,7 +94,7 @@ const App: React.FC = () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [isRecording, startRecording, stopRecording]);
+  }, [chatHistory, isRecording, startRecording, stopRecording]);
 
   return (
     <div className="relative min-h-screen w-full flex flex-col items-center gap-4">
@@ -87,22 +110,24 @@ const App: React.FC = () => {
 
       {chatHistory.length > 0 && <ChatHistory history={chatHistory} />}
 
-      {isActive && <Recette
-        title="Tarte aux Pommes"
-        ingredients={[
-          "3 pommes",
-          "1 pâte feuilletée",
-          "2 cuillères à soupe de sucre",
-          "1 pincée de cannelle",
-        ]}
-        instructions={[
-          "Préchauffez le four à 180°C.",
-          "Étalez la pâte dans un moule.",
-          "Disposez les tranches de pommes.",
-          "Saupoudrez de sucre et de cannelle.",
-          "Faites cuire 30 minutes.",
-        ]}
-      /> }
+      {isActive && (
+        <Recette
+          title="Tarte aux Pommes"
+          ingredients={[
+            "3 pommes",
+            "1 pâte feuilletée",
+            "2 cuillères à soupe de sucre",
+            "1 pincée de cannelle",
+          ]}
+          instructions={[
+            "Préchauffez le four à 180°C.",
+            "Étalez la pâte dans un moule.",
+            "Disposez les tranches de pommes.",
+            "Saupoudrez de sucre et de cannelle.",
+            "Faites cuire 30 minutes.",
+          ]}
+        />
+      )}
     </div>
   );
 };
