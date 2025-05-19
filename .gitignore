@@ -1,0 +1,7 @@
+# Python byte-compiled files
+**/__pycache__/
+**/*.py[cod]
+
+# Vite / npm / yarn lockfiles (front)
+/front/package-lock.json
+/front/yarn.lock
