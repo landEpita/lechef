@@ -88,19 +88,12 @@ const App: React.FC = () => {
       {chatHistory.length > 0 && <ChatHistory history={chatHistory} />}
 
       {isActive && <Recette
-        title="Tarte aux Pommes"
+        title="Burger du chef"
         ingredients={[
           "3 pommes",
           "1 pâte feuilletée",
           "2 cuillères à soupe de sucre",
           "1 pincée de cannelle",
-        ]}
-        instructions={[
-          "Préchauffez le four à 180°C.",
-          "Étalez la pâte dans un moule.",
-          "Disposez les tranches de pommes.",
-          "Saupoudrez de sucre et de cannelle.",
-          "Faites cuire 30 minutes.",
         ]}
       /> }
     </div>
