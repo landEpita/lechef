@@ -100,5 +100,72 @@ const speakWithElevenLabs = async (
       }
     });
   };
+
+
+  const speakWithOpenAI = async (
+    text: string,
+    setIsTalking: React.Dispatch<React.SetStateAction<boolean>>
+  ): Promise<void> => {
+    const OPENAI_API_KEY = "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";
+    if (!OPENAI_API_KEY) {
+      console.error("Missing OPENAI_API_KEY");
+      return;
+    }
   
-  export { speakWithBrowserTTS, speakWithElevenLabs };
+    const res = await fetch("https://api.openai.com/v1/audio/speech", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": '*',
+        Authorization: `Bearer ${OPENAI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: "tts-1",
+        voice: "alloy", // or any available chef-style voice
+        input: text,
+        instructions: [
+          // Adopt a Michelin-starred executive-chef persona
+          "Speak with calm authority and refined confidence, like a Michelin-starred executive chef addressing a masterclass.",
+          // Tone and accent
+          "Keep diction crisp, measured and deliberate; add a light French inflection on French culinary terms (e.g., mirepoix, beurre blanc).",
+          // Pacing
+          "Maintain a steady, unhurried pace, pausing briefly before key steps as if demonstrating technique at the pass.",
+          // Vocabulary & imagery
+          "Use precise culinary vocabulary and vivid yet elegant sensory adjectives that convey expertise rather than flamboyance.",
+          // Style limits
+          "Avoid slang or overt humor; allow professionalism and passion for gastronomy to shine through."
+        ].join(" ")
+      }),
+    });
+  
+    if (!res.ok) {
+      console.error("Failed to get OpenAI TTS audio", await res.text());
+      return;
+    }
+  
+    const audioBlob = await res.blob();
+    const audioUrl = URL.createObjectURL(audioBlob);
+    const audio = new Audio(audioUrl);
+  
+    return new Promise((resolve) => {
+      audio.onplay = () => {
+        setIsTalking(true);
+      };
+      audio.onended = () => {
+        setIsTalking(false);
+        resolve();
+      };
+      audio.onerror = (err) => {
+        console.error("Audio error", err);
+        setIsTalking(false);
+        resolve();
+      };
+      audio.play().catch((err) => {
+        console.error("Audio play failed", err);
+        setIsTalking(false);
+        resolve();
+      });
+    });
+  };
+  
+  export { speakWithBrowserTTS, speakWithElevenLabs, speakWithOpenAI };
