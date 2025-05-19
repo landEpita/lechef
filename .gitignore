@@ -5,3 +5,5 @@
 # Vite / npm / yarn lockfiles (front)
 /front/package-lock.json
 /front/yarn.lock
+
+.venv

@@ -1,0 +1,8 @@
+{
+    "put_burger_down" : [1, 0, 0, 0, 0, 0],
+    "put_salad" : [0, 1, 0, 0, 0, 0],
+    "put_tomato" : [0, 0, 1, 0, 0, 0],
+    "put_steak" : [0, 0, 0, 1, 0, 0],
+    "put_cheese" : [0, 0, 0, 0, 1, 0],
+    "put_burger_top" : [0, 0, 0, 0, 0, 1]
+}
