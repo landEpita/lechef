@@ -106,7 +106,7 @@ const speakWithElevenLabs = async (
     text: string,
     setIsTalking: React.Dispatch<React.SetStateAction<boolean>>
   ): Promise<void> => {
-    const OPENAI_API_KEY = "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";
+    const OPENAI_API_KEY = ""
     if (!OPENAI_API_KEY) {
       console.error("Missing OPENAI_API_KEY");
       return;
