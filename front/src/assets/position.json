@@ -1,0 +1,79 @@
+{
+    "mouths": [
+      {
+        "name": "mouth-base",
+        "image": "src/assets/mouth-base.png",
+        "width": 89,
+        "height": 20,
+        "left": 222.58,
+        "top": 390.68
+      },
+      {
+        "name": "mouth-1",
+        "image": "src/assets/mouth-1.png",
+        "width": 90.5,
+        "height": 52.57,
+        "left": 223.08,
+        "top": 368.18
+      },
+      {
+        "name": "mouth-3",
+        "image": "src/assets/mouth-3.png",
+        "width": 90.52,
+        "height": 59.77,
+        "left": 223.08,
+        "top": 368.18
+      },
+      {
+        "name": "mouth-4",
+        "image": "src/assets/mouth-4.png",
+        "width": 54.47,
+        "height": 23.44,
+        "left": 241.89,
+        "top": 392.68
+      },
+      {
+        "name": "mouth-2",
+        "image": "src/assets/mouth-2.png",
+        "width": 45.05,
+        "height": 14.5,
+        "left": 245.03,
+        "top": 398.18
+      }
+    ],
+    "eyes": [
+      {
+        "name": "eye-1",
+        "image": "src/assets/eye1.png",
+        "width": 122.11,
+        "height": 35.85,
+        "left": 204.58,
+        "top": 262.68
+      },
+      {
+        "name": "eye-2",
+        "image": "src/assets/eye2.png",
+        "width": 136,
+        "height": 44.85,
+        "left": 198.58,
+        "top": 253.68
+      },
+      {
+        "name": "eye-3",
+        "image": "src/assets/eye3.png",
+        "width": 141,
+        "height": 38.85,
+        "left": 195.58,
+        "top": 259.68
+      },
+      {
+        "name": "eye-4",
+        "image": "src/assets/eye4.png",
+        "width": 136,
+        "height": 42,
+        "left": 197.58,
+        "top": 260.68
+      }
+    ]
+  }
+  

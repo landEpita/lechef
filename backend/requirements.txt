@@ -5,3 +5,5 @@ numpy>=1.23.0
 soundfile
 pydub
 faster-whisper
+python-multipart
+mistralai
