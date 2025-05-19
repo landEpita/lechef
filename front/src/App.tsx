@@ -82,7 +82,7 @@ const App: React.FC = () => {
             ]);
 
             /* -------- TTS -------- */
-            await speakWithOpenAI(textForTTS, setIsTalking);
+            await speakWithElevenLabs(textForTTS, setIsTalking);
           })
           .catch((err) => console.error("Backend error:", err));
       }
