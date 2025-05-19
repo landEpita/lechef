@@ -168,4 +168,4 @@ const speakWithElevenLabs = async (
     });
   };
   
-  export { speakWithBrowserTTS, speakWithElevenLabs, speakWithOpenAI };
+export { speakWithBrowserTTS, speakWithElevenLabs, speakWithOpenAI };

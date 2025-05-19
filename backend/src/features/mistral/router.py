@@ -10,4 +10,4 @@ async def generate_from_mistral(req: MistralRequest):
         response_text = await query_mistral(req)
         return MistralResponse(response=response_text)
     except Exception as e:
-        return MistralResponse(response="", error=str(e))
+        return MistralResponse(response={ "text": "error", "steps": None, "title": None } , error=str(e))

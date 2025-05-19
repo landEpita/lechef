@@ -1,3 +1,4 @@
+import json
 import logging
 import httpx
 from fastapi import HTTPException
@@ -102,8 +103,24 @@ async def query_mistral(request: MistralRequest) -> str:
             logger.error("Mistral error %s: %s", response.status_code, response.text)
             raise HTTPException(status_code=500, detail="Mistral API failed")
 
-        content = response.json()["choices"][0]["message"]["content"].strip()
+        content = response.json()["choices"][0]["message"]["content"]
+
+        try:
+            content = json.loads(content)
+        except json.JSONDecodeError:
+            logger.error("Mistral response is not valid JSON: %s", content)
+            raise HTTPException(status_code=500, detail="Invalid JSON response from Mistral")
+
+
+        
+        print(content)
+        print(type(content))
         logger.debug("Mistral reply: %s", content)
+        if "steps" not in content:
+            content["steps"] = None
+        if "title" not in content:
+            content["title"] = None
+        print(content)
         return content
 
     except Exception as exc:

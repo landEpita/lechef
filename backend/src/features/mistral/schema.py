@@ -8,6 +8,12 @@ class Message(BaseModel):
 class MistralRequest(BaseModel):
     history: List[Message]
 
+class MistralResponseData(BaseModel):
+    title: str | None
+    steps: List[str] | None
+    text: str
+    
+
 class MistralResponse(BaseModel):
-    response: str
+    response: MistralResponseData | None = None
     error: str | None = None

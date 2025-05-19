@@ -2,26 +2,18 @@ import React, { useEffect, useState, useCallback } from "react";
 import Face from "./components/face";
 import { useRecorder } from "./hooks/useRecorder";
 import ChatHistory from "./components/ChatHistory";
-import speakWithElevenLabs, { speakWithOpenAI } from "./services/tts";
+import { speakWithElevenLabs, speakWithOpenAI } from "./services/tts";
 import Recette from "./components/Recette";
 
 /** Extrait la clé `text` si la réponse est un JSON valide, sinon renvoie la chaîne brute. */
-function extractText(raw: string): string {
-  try {
-    const parsed = JSON.parse(raw);
-    if (parsed && typeof parsed === "object" && "text" in parsed) {
-      return parsed.text as string;
-    }
-  } catch {
-    /* raw n'est pas un JSON --> on renvoie tel quel */
-  }
-  return raw;
-}
+
 
 const App: React.FC = () => {
   const [isTalking, setIsTalking] = useState(false);
   const [isActive, setIsActive] = useState(false);
   const { isRecording, startRecording, stopRecording } = useRecorder();
+  const [isCooking, setIsCooking] = useState(false);
+  const [burgerTitle, setBurgerTitle] = useState("Le burger du Chef");
 
   const [chatHistory, setChatHistory] = useState<
     { role: "user" | "bot"; text: string }[]
@@ -70,10 +62,18 @@ const App: React.FC = () => {
         })
           .then((res) => res.json())
           .then(async (data) => {
-            const rawReply = data.response as string;
+            const rawReply = data.response;
+
+            if (rawReply.steps) {
+              setIsCooking(true);
+            }
+
+            if (rawReply.title) {
+              setBurgerTitle(rawReply.title);
+            }
 
             /* -------- on extrait uniquement le texte pour TTS -------- */
-            const textForTTS = extractText(rawReply);
+            const textForTTS = rawReply.text
 
             /* -------- on ajoute la réponse dans l'historique -------- */
             setChatHistory((prev) => [
@@ -110,8 +110,8 @@ const App: React.FC = () => {
 
       {chatHistory.length > 0 && <ChatHistory history={chatHistory} />}
 
-      {isActive && <Recette
-        title="Burger du chef"
+      {(isActive ||  isCooking)  && <Recette
+        title={burgerTitle}
         ingredients={[
           "3 pommes",
           "1 pâte feuilletée",
