@@ -1,3 +1,0 @@
-[submodule "backend/src/lerobot-mks"]
-	path = backend/src/lerobot-mks
-	url = https://github.com/landEpita/lerobot-mks.git
