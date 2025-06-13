@@ -1,0 +1,3 @@
+[submodule "backend/src/lerobot-act"]
+	path = backend/src/lerobot-act
+	url = https://github.com/landEpita/lerobot-act.git
