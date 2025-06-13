@@ -19,6 +19,15 @@ ingredients_mapping = { # Pour mapper les actions à leur index de policy
     "place_sandwich_bread_top" : 4
 }
 
+def delete_doublons(ingredients):
+    vue = set()
+    ingredients_without_doublons = []
+    for x in ingredients:
+        if x not in vue:
+            vue.add(x)
+            ingredients_without_doublons.append(x)
+    return ingredients_without_doublons  # L’ordre est conservé
+
 
 async def query_mistral(request: MistralRequest) -> str:
     if not MISTRAL_API_KEY:
@@ -125,7 +134,7 @@ async def query_mistral(request: MistralRequest) -> str:
             mapped_steps = []
             for step in content["steps"]:
                 mapped_steps.append(ingredients_mapping[step])
-            content["steps"] = mapped_steps
+            content["steps"] = delete_doublons(mapped_steps)
         if "title" not in content:
             content["title"] = None
         print(content)
