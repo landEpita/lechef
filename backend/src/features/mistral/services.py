@@ -55,6 +55,7 @@ async def query_mistral(request: MistralRequest) -> str:
 
             # ─ customisation rules ─
             "- Users may omit cheese/salad/ham.\n"
+            "- You can only use each ingredient once."
             "- No other ingredients are allowed; otherwise reply exactly: "
             "\"Sorry, I only make sandwiches.\" (nothing more).\n\n"
 
@@ -62,13 +63,13 @@ async def query_mistral(request: MistralRequest) -> str:
             "Always respond with ONE JSON object and nothing else.\n"
             "Required key:\n"
             "  • text   (string) – brief chef reply (≤ 2 short sentences)\n"
-            "Optional keys (include ONLY when preparing a burger or sandwich):\n"
+            "Optional keys (include ONLY when preparing a sandwich):\n"
             "  • title  (string) – short dish name\n"
             "  • steps  (array)  – ordered list of function names\n\n"
             "Examples:\n"
             "# Casual chat\n"
             "{\n"
-            "  \"text\": \"Bonjour! I’m ready when you want a burger or a sandwich.\"\n"
+            "  \"text\": \"Bonjour! I’m ready when you want a sandwich.\"\n"
             "}\n\n"
             "# Sandwiche with cheese and ham, no salad.\n"
             "{\n"
