@@ -29,6 +29,9 @@ RUN python3 -m pip install --no-cache-dir --upgrade pip && \
 # Copy the rest of the application code into the container
 COPY . /app
 
+RUN cd /app/src/lerobot-act && pip install -e ".[feetechmks]"
+RUN apt update && apt install -y ffmpeg libavutil-dev
+
 # Specify the startup command
 CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
 
