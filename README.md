@@ -2,8 +2,9 @@
 python -m venv .venv
 source .venv/bin/activate
 
+cd backend
 pip install -r requirements.txt
-cd backend/src/lerobot-act/
-pip install -e ".[feetechmks]"
-pip install -e /lechef/backend/src/lerobot_act
+pip install -e "/src/lerobot-act/[feetechmks]"
+
+uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
 ```

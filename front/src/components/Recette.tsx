@@ -12,7 +12,13 @@ const Recette: React.FC<RecetteProps> = ({ title, ingredients }) => {
       <h2 className="text-3xl font-bold text-center mb-4 z-10 relative">{title}</h2>
 
       <div className="relative z-0 -mt-10">
-      <Burger highlightIndex={0} />
+      <Burger highlightIndex={0} order={[  'bottom_bread',
+  'salad',
+
+  'steak',
+  'chedar',
+  'tomato',
+  'upper_bread',]}/>
       </div>
     </div>
   );

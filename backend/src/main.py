@@ -70,3 +70,6 @@ app.include_router(stt_router, prefix="/api/stt", tags=["Speech-to-Text"]) # Tag
 from src.features.mistral.router import router as mistral_router
 app.include_router(mistral_router, prefix="/api/mistral", tags=["Chat"])
 
+from src.features.robot.router import router as robot_router
+app.include_router(robot_router, prefix="/api/robot", tags=["robot"])
+

@@ -29,8 +29,7 @@ RUN python3 -m pip install --no-cache-dir --upgrade pip && \
 # Copy the rest of the application code into the container
 COPY . /app
 
-RUN cd /app/src/lerobot-act && pip install -e ".[feetechmks]"
-RUN pip install -e /app/backend/src/lerobot_act
+RUN pip install -e "/app/src/lerobot_act[feetechmks]"
 RUN apt update && apt install -y ffmpeg libavutil-dev
 
 # Specify the startup command
