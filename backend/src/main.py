@@ -8,6 +8,11 @@ from fastapi.middleware.cors import CORSMiddleware
 # Keep Whisper model loading if still needed for STT
 from faster_whisper import WhisperModel
 
+from lerobot.scripts.stream_policy_actions import get_policies, get_robot
+
+policies = get_policies()
+robot = get_robot()
+
 # --- Configuration (Keep existing logging setup) ---
 try:
     import src.core.config
