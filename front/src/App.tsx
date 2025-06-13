@@ -14,6 +14,7 @@ const App: React.FC = () => {
   const { isRecording, startRecording, stopRecording } = useRecorder();
   const [isCooking, setIsCooking] = useState(false);
   const [burgerTitle, setBurgerTitle] = useState("Le burger du Chef");
+  const [steps, setSteps] = useState([]);
 
   const [chatHistory, setChatHistory] = useState<
     { role: "user" | "bot"; text: string }[]
@@ -66,6 +67,7 @@ const App: React.FC = () => {
 
             if (rawReply.steps) {
               setIsCooking(true);
+              setSteps(rawReply.steps);
             }
 
             if (rawReply.title) {
@@ -112,12 +114,7 @@ const App: React.FC = () => {
 
       {(isActive ||  isCooking)  && <Recette
         title={burgerTitle}
-        ingredients={[
-          "3 pommes",
-          "1 pâte feuilletée",
-          "2 cuillères à soupe de sucre",
-          "1 pincée de cannelle",
-        ]}
+        ingredients={steps}
       /> }
     </div>
   );

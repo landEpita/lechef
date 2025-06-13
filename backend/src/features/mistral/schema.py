@@ -10,7 +10,7 @@ class MistralRequest(BaseModel):
 
 class MistralResponseData(BaseModel):
     title: str | None
-    steps: List[str] | None
+    steps: List[int] | None
     text: str
     
 

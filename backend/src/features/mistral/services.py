@@ -13,8 +13,8 @@ MODEL_NAME = "mistral-tiny"  # ou autre modèle
 
 ingredients_mapping = { # Pour mapper les actions à leur index de policy
     "place_sandwich_bread_bottom" : 0,
-    "add_ham_slice" : 1,
-    "add_cheese_slice" : 2,
+    "add_cheese_slice" : 1,
+    "add_ham_slice" : 2,
     "add_salad_slice" : 3,
     "place_sandwich_bread_top" : 4
 }

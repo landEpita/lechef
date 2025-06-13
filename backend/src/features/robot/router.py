@@ -27,7 +27,7 @@ async def perform_action(request: ActionRequest):
     try:
         index = request.action_index
 
-        run_action(policies[index], robot)
+        # run_action(policies[index], robot)
         
         logger.info(f"Exécution de l'action avec index {index}")
 
